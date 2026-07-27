@@ -16,9 +16,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.List;
 import java.util.UUID;
 
-public final class GuiUtils {
+public final class GuiUtil {
 
-    private GuiUtils() {}
+    private GuiUtil() {}
 
     public static GuiItem createGuiItem(GuiItemData data, String key, Object... replacements) {
         if (data == null) {
