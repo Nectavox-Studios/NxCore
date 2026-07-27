@@ -1,7 +1,10 @@
 package com.nectavox.nxcore;
 
+import com.nectavox.nxcore.interfaces.SchedulerAdapter;
 import com.nectavox.nxcore.managers.LangManager;
 import com.nectavox.nxcore.managers.MenuManager;
+import com.nectavox.nxcore.schedulers.PaperScheduler;
+import com.nectavox.nxcore.schedulers.SpigotScheduler;
 import com.nectavox.nxcore.utils.ConfigUtil;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -13,6 +16,7 @@ public abstract class NxPlugin extends JavaPlugin {
     private ConfigUtil configUtil;
     private LangManager langManager;
     private MenuManager menuManager;
+    private SchedulerAdapter scheduler;
 
     @Override
     public final void onEnable() {
@@ -24,6 +28,12 @@ public abstract class NxPlugin extends JavaPlugin {
 
         menuManager = new MenuManager(this);
         menuManager.loadMenus(true);
+
+        if (isPaper()) {
+            scheduler = new PaperScheduler(this);
+        } else {
+            scheduler = new SpigotScheduler(this);
+        }
 
         this.enable();
     }
@@ -56,5 +66,14 @@ public abstract class NxPlugin extends JavaPlugin {
 
     protected void reload() {
 
+    }
+
+    private static boolean isPaper() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 }
