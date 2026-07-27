@@ -12,7 +12,7 @@ dependencies {
     compileOnly(project(":api"))
 
     implementation(project(":bukkit"))
-    implementation(project(":velocity"))
+    // implementation(project(":velocity"))
 }
 
 allprojects {
