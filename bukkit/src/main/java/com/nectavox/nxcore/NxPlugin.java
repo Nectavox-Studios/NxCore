@@ -1,14 +1,15 @@
 package com.nectavox.nxcore;
 
+import com.nectavox.nxcore.audience.PaperAudienceProvider;
+import com.nectavox.nxcore.interfaces.AudienceProvider;
 import com.nectavox.nxcore.interfaces.SchedulerAdapter;
 import com.nectavox.nxcore.managers.LangManager;
 import com.nectavox.nxcore.managers.MenuManager;
-import com.nectavox.nxcore.providers.AdventureAudienceProvider;
+import com.nectavox.nxcore.audience.SpigotAudienceProvider;
 import com.nectavox.nxcore.schedulers.PaperScheduler;
 import com.nectavox.nxcore.schedulers.SpigotScheduler;
 import com.nectavox.nxcore.utils.ConfigUtil;
 import lombok.Getter;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
@@ -18,7 +19,7 @@ public abstract class NxPlugin extends JavaPlugin {
     private LangManager langManager;
     private MenuManager menuManager;
     private SchedulerAdapter scheduler;
-    private AdventureAudienceProvider audience;
+    private AudienceProvider audience;
 
     @Override
     public final void onEnable() {
@@ -33,11 +34,11 @@ public abstract class NxPlugin extends JavaPlugin {
 
         if (isPaper()) {
             scheduler = new PaperScheduler(this);
+            audience = new PaperAudienceProvider();
         } else {
             scheduler = new SpigotScheduler(this);
+            audience = new SpigotAudienceProvider(this);
         }
-
-        audience = new AdventureAudienceProvider(this);
 
         this.enable();
     }
