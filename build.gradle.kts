@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("java-library")
+    id("maven-publish")
     id("com.gradleup.shadow") version "9.4.1"
 }
 
@@ -29,6 +30,7 @@ allprojects {
 
 subprojects {
     apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
     apply(plugin = "com.gradleup.shadow")
 
     java {
@@ -50,6 +52,14 @@ subprojects {
         "annotationProcessor"(lombok)
         "testCompileOnly"(lombok)
         "testAnnotationProcessor"(lombok)
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["java"])
+            }
+        }
     }
 }
 
