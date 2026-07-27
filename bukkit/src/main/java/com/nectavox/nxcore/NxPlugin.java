@@ -70,7 +70,7 @@ public abstract class NxPlugin extends JavaPlugin {
 
     }
 
-    private static boolean isPaper() {
+    public static boolean isPaper() {
         try {
             Class.forName("io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler");
             return true;
