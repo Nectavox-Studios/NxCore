@@ -11,8 +11,8 @@ public interface SchedulerAdapter {
     TaskHandle runLater(Runnable task, long delayTicks);
     TaskHandle runLaterAsync(Runnable task, long delayTicks);
 
-    TaskHandle runTimer(Runnable task, long delayTicks, long periodTicks);
-    TaskHandle runTimerAsync(Runnable task, long delayTicks, long periodTicks);
+    TaskHandle runTimer(Consumer<TaskHandle> task, long delayTicks, long periodTicks);
+    TaskHandle runTimerAsync(Consumer<TaskHandle> task, long delayTicks, long periodTicks);
 
 
 
@@ -20,5 +20,5 @@ public interface SchedulerAdapter {
 
     TaskHandle runLaterForEntity(Runnable task, long delayTicks, Object entity);
 
-    TaskHandle runTimerForEntity(Runnable task, long delayTicks, long periodTicks, Object entity);
+    TaskHandle runTimerForEntity(Consumer<TaskHandle> task, long delayTicks, long periodTicks, Object entity);
 }

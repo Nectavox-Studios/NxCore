@@ -35,6 +35,8 @@ public abstract class NxPlugin extends JavaPlugin {
             scheduler = new SpigotScheduler(this);
         }
 
+        
+
         this.enable();
     }
 
