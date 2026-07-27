@@ -3,6 +3,7 @@ package com.nectavox.nxcore;
 import com.nectavox.nxcore.interfaces.SchedulerAdapter;
 import com.nectavox.nxcore.managers.LangManager;
 import com.nectavox.nxcore.managers.MenuManager;
+import com.nectavox.nxcore.providers.AdventureAudienceProvider;
 import com.nectavox.nxcore.schedulers.PaperScheduler;
 import com.nectavox.nxcore.schedulers.SpigotScheduler;
 import com.nectavox.nxcore.utils.ConfigUtil;
@@ -17,6 +18,7 @@ public abstract class NxPlugin extends JavaPlugin {
     private LangManager langManager;
     private MenuManager menuManager;
     private SchedulerAdapter scheduler;
+    private AdventureAudienceProvider audience;
 
     @Override
     public final void onEnable() {
@@ -35,7 +37,7 @@ public abstract class NxPlugin extends JavaPlugin {
             scheduler = new SpigotScheduler(this);
         }
 
-        
+        audience = new AdventureAudienceProvider(this);
 
         this.enable();
     }
