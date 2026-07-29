@@ -55,7 +55,7 @@ public final class GuiUtil {
 
         ItemBuilder itemBuilder = ItemBuilder.from(new ItemStack(data.getMaterial(), Math.max(1, data.getAmount())));
 
-        if (!data.getName().isBlank()) {
+        if (data.getName() != null && !data.getName().isBlank()) {
             itemBuilder.name(Color.colorComponent(PlaceholderAPI.parse(parsedPlayer, name)));
         }
 

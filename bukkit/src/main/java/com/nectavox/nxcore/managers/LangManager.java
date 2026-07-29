@@ -27,10 +27,6 @@ public class LangManager {
     private final Map<String, String> languages = new ConcurrentHashMap<>();
     private final Map<String, List<String>> lores = new ConcurrentHashMap<>();
 
-    public void sendMessage(Player player, String lang, boolean color, boolean prefix, Object... replacements) {
-        player.sendMessage(getComponent(lang, color, prefix, replacements));
-    }
-
     public String get(String lang, boolean color, boolean prefix, Object... replacements) {
         String text = resolveText(lang, prefix, replacements);
         return color ? Color.colorLegacy(text) : text;
