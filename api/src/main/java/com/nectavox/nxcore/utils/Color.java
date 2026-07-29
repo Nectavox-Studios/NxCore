@@ -17,7 +17,7 @@ public final class Color {
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
 
     private static final Pattern HEX_PATTERN =
-            Pattern.compile("(?i)&?#([0-9a-f]{6})");
+            Pattern.compile("&#([A-Fa-f0-9]{6})");
 
     public static String colorLegacy(String text) {
         if (text == null || text.isEmpty()) {
