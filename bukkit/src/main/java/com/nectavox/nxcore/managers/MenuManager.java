@@ -5,6 +5,7 @@ import com.nectavox.nxcore.models.GuiData;
 import com.nectavox.nxcore.models.GuiItemData;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -147,6 +148,38 @@ public class MenuManager {
             }
         }
 
+        Sound sound = null;
+        String soundName = section.getString("sound");
+
+        if (soundName != null && !soundName.isBlank()) {
+            try {
+                sound = Sound.valueOf(soundName.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().warning(
+                        "Invalid sound '" + soundName + "' for '" + key + "' in " + file.getName()
+                );
+            }
+        }
+
+        Map<String, Object> extraData = new ConcurrentHashMap<>();
+
+        for (String path : section.getKeys(false)) {
+            if (Set.of(
+                    "material",
+                    "name",
+                    "lore",
+                    "slot",
+                    "head",
+                    "amount",
+                    "glow",
+                    "custom-model-data"
+            ).contains(path)) {
+                continue;
+            }
+
+            extraData.put(path, section.get(path));
+        }
+
         return GuiItemData.builder()
                 .material(material)
                 .name(section.getString("name", ""))
@@ -157,6 +190,8 @@ public class MenuManager {
                 .amount(Math.max(1, section.getInt("amount", 1)))
                 .glow(section.getBoolean("glow", false))
                 .customModelData(section.contains("custom-model-data") ? section.getInt("custom-model-data") : null)
+                .data(extraData)
+                .sound(sound)
                 .build();
     }
 

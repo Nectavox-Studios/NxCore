@@ -3,8 +3,10 @@ package com.nectavox.nxcore.models;
 import lombok.Builder;
 import lombok.Value;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 
 import java.util.List;
+import java.util.Map;
 
 @Value
 @Builder
@@ -26,4 +28,8 @@ public class GuiItemData {
     boolean glow = false;
 
     Integer customModelData;
+
+    Sound sound;
+
+    Map<String, Object> data;
 }
