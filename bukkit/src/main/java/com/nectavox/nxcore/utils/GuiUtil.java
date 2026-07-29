@@ -38,8 +38,8 @@ public final class GuiUtil {
                     .asGuiItem();
         }
 
+        data.setMaterial(Material.PLAYER_HEAD);
         ItemStack item = buildItem(parsedPlayer, data, replacements);
-        item.setType(Material.PLAYER_HEAD);
 
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwningPlayer(player);

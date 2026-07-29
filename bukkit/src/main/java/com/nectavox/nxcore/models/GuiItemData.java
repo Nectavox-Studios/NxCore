@@ -1,6 +1,7 @@
 package com.nectavox.nxcore.models;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Value;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -8,7 +9,7 @@ import org.bukkit.Sound;
 import java.util.List;
 import java.util.Map;
 
-@Value
+@Data
 @Builder
 public class GuiItemData {
     Material material;
