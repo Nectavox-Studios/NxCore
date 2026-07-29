@@ -18,7 +18,8 @@ import java.util.UUID;
 
 public final class GuiUtil {
 
-    private GuiUtil() {}
+    private GuiUtil() {
+    }
 
     public static GuiItem createGuiItem(GuiItemData data, String key, Object... replacements) {
         if (data == null) {
@@ -31,27 +32,13 @@ public final class GuiUtil {
         String name = Placeholders.apply(data.getName(), wrapped);
         List<String> lore = Placeholders.apply(data.getLore(), wrapped);
 
-        ItemStack item = new ItemStack(data.getMaterial(), Math.max(1, data.getAmount()));
-        ItemMeta meta = item.getItemMeta();
-
-        if (meta != null) {
-            meta.displayName(Color.colorComponent(name));
-
-            if (!lore.isEmpty()) {
-                meta.lore(lore.stream().map(Color::colorComponent).toList());
-            }
-
-            if (data.getCustomModelData() != null) {
-                meta.setCustomModelData(data.getCustomModelData());
-            }
-
-            if (data.isGlow()) {
-                meta.addEnchant(Enchantment.DURABILITY, 1, true);
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            }
-
-            item.setItemMeta(meta);
-        }
+        ItemStack item = ItemBuilder
+                .from(new ItemStack(data.getMaterial(), Math.max(1, data.getAmount())))
+                .name(Color.colorComponent(name))
+                .lore(lore.stream().map(Color::colorComponent).toList())
+                .model(data.getCustomModelData())
+                .glow(data.isGlow())
+                .build();
 
         if (data.getMaterial() == Material.PLAYER_HEAD && data.getHead() != null) {
             applySkullTexture(item, data.getHead());

@@ -25,12 +25,6 @@ allprojects {
         maven("https://jitpack.io/") { name = "JitPack" }
     }
 
-    tasks.withType<ShadowJar>().configureEach {
-        mergeServiceFiles()
-
-        relocate("dev.triumphteam.gui", "com.nectavox.nxcore.libs.gui")
-        relocate("net.kyori", "com.nectavox.nxcore.libs.kyori")
-    }
 
 }
 
@@ -62,6 +56,13 @@ subprojects {
                 from(components["java"])
             }
         }
+    }
+
+    tasks.withType<ShadowJar>().configureEach {
+        mergeServiceFiles()
+
+        relocate("dev.triumphteam.gui", "com.nectavox.nxcore.libs.gui")
+        relocate("net.kyori", "com.nectavox.nxcore.libs.kyori")
     }
 }
 
