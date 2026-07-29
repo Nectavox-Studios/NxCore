@@ -39,11 +39,6 @@ subprojects {
         options.encoding = "UTF-8"
     }
 
-    tasks.withType<ShadowJar> {
-        relocate("dev.triumphteam.gui", "com.nectavox.nxcore.libs.gui")
-        relocate("net.kyori", "com.nectavox.nxcore.libs.kyori")
-    }
-
     dependencies {
         val lombok = "org.projectlombok:lombok:1.18.34"
 
@@ -64,6 +59,11 @@ subprojects {
 
 tasks.shadowJar {
     from(project(":api").sourceSets.main.get().output)
+}
+
+tasks.withType<ShadowJar>().configureEach {
+    relocate("dev.triumphteam.gui", "com.nectavox.nxcore.libs.gui")
+    relocate("net.kyori", "com.nectavox.nxcore.libs.kyori")
 }
 
 tasks.build.get().dependsOn(tasks.shadowJar)
