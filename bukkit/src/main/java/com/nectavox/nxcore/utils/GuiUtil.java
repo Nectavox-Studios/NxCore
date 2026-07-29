@@ -7,7 +7,9 @@ import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.GuiItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,6 +30,27 @@ public final class GuiUtil {
                     .asGuiItem();
         }
 
+        return ItemBuilder.from(buildItem(data, replacements)).asGuiItem();
+    }
+
+    public static GuiItem createSkullGuiItem(OfflinePlayer player, GuiItemData data, String key, Object... replacements) {
+        if (data == null) {
+            return ItemBuilder.from(Material.BARRIER)
+                    .name(Color.colorComponent("&cMissing: " + key))
+                    .asGuiItem();
+        }
+
+        ItemStack item = buildItem(data, replacements);
+        item.setType(Material.PLAYER_HEAD);
+
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        meta.setOwningPlayer(player);
+        item.setItemMeta(meta);
+
+        return ItemBuilder.from(item).asGuiItem();
+    }
+
+    private static ItemStack buildItem(GuiItemData data, Object... replacements) {
         Object[] wrapped = wrapPlaceholders(replacements);
         String name = Placeholders.apply(data.getName(), wrapped);
         List<String> lore = Placeholders.apply(data.getLore(), wrapped);
@@ -48,7 +71,7 @@ public final class GuiUtil {
             applySkullTexture(item, data.getHead());
         }
 
-        return ItemBuilder.from(item).asGuiItem();
+        return item;
     }
 
     private static void applySkullTexture(ItemStack item, String texture) {
