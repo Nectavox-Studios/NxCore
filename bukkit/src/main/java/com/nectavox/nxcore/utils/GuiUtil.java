@@ -90,7 +90,7 @@ public final class GuiUtil {
     private static Object[] wrapPlaceholders(Object... replacements) {
         Object[] wrapped = new Object[replacements.length];
         for (int i = 0; i + 1 < replacements.length; i += 2) {
-            wrapped[i] = "%" + replacements[i] + "%";
+            wrapped[i] = replacements[i];
             wrapped[i + 1] = replacements[i + 1];
         }
         return wrapped;
