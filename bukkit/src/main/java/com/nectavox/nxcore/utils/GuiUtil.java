@@ -8,8 +8,10 @@ import dev.triumphteam.gui.guis.GuiItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,24 +21,24 @@ public final class GuiUtil {
     private GuiUtil() {
     }
 
-    public static GuiItem createGuiItem(GuiItemData data, String key, Object... replacements) {
+    public static GuiItem createGuiItem(@Nullable Player parsedPlayer, GuiItemData data, String key, Object... replacements) {
         if (data == null) {
             return ItemBuilder.from(Material.BARRIER)
                     .name(Color.colorComponent("&cMissing: " + key))
                     .asGuiItem();
         }
 
-        return ItemBuilder.from(buildItem(data, replacements)).asGuiItem();
+        return ItemBuilder.from(buildItem(parsedPlayer, data, replacements)).asGuiItem();
     }
 
-    public static GuiItem createSkullGuiItem(OfflinePlayer player, GuiItemData data, String key, Object... replacements) {
+    public static GuiItem createSkullGuiItem(OfflinePlayer player, @Nullable Player parsedPlayer, GuiItemData data, String key, Object... replacements) {
         if (data == null) {
             return ItemBuilder.from(Material.BARRIER)
                     .name(Color.colorComponent("&cMissing: " + key))
                     .asGuiItem();
         }
 
-        ItemStack item = buildItem(data, replacements);
+        ItemStack item = buildItem(parsedPlayer, data, replacements);
         item.setType(Material.PLAYER_HEAD);
 
         SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -46,16 +48,20 @@ public final class GuiUtil {
         return ItemBuilder.from(item).asGuiItem();
     }
 
-    private static ItemStack buildItem(GuiItemData data, Object... replacements) {
+    private static ItemStack buildItem(@Nullable Player parsedPlayer, GuiItemData data, Object... replacements) {
         Object[] wrapped = wrapPlaceholders(replacements);
         String name = Placeholders.apply(data.getName(), wrapped);
         List<String> lore = Placeholders.apply(data.getLore(), wrapped);
 
         ItemBuilder itemBuilder = ItemBuilder.from(new ItemStack(data.getMaterial(), Math.max(1, data.getAmount())));
 
-        if (!data.getName().isBlank()) itemBuilder.name(Color.colorComponent(name));
+        if (!data.getName().isBlank()) {
+            itemBuilder.name(Color.colorComponent(PlaceholderAPI.parse(parsedPlayer, name)));
+        }
 
-        if (!data.getLore().isEmpty()) itemBuilder.lore(lore.stream().map(Color::colorComponent).toList());
+        if (!data.getLore().isEmpty()) itemBuilder.lore(lore.stream().map(text -> {
+            return Color.colorComponent(PlaceholderAPI.parse(parsedPlayer, text));
+        }).toList());
 
         if (data.getCustomModelData() != null) itemBuilder.model(data.getCustomModelData());
 
