@@ -24,6 +24,14 @@ allprojects {
         maven("https://repo.helpch.at/releases/") { name = "PlaceholderAPI" }
         maven("https://jitpack.io/") { name = "JitPack" }
     }
+
+    tasks.withType<ShadowJar>().configureEach {
+        mergeServiceFiles()
+
+        relocate("dev.triumphteam.gui", "com.nectavox.nxcore.libs.gui")
+        relocate("net.kyori", "com.nectavox.nxcore.libs.kyori")
+    }
+
 }
 
 subprojects {
@@ -61,9 +69,6 @@ tasks.shadowJar {
     from(project(":api").sourceSets.main.get().output)
 }
 
-tasks.withType<ShadowJar>().configureEach {
-    relocate("dev.triumphteam.gui", "com.nectavox.nxcore.libs.gui")
-    relocate("net.kyori", "com.nectavox.nxcore.libs.kyori")
-}
+
 
 tasks.build.get().dependsOn(tasks.shadowJar)
