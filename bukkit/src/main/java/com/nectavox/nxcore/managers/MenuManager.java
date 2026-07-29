@@ -184,7 +184,7 @@ public class MenuManager {
                 .material(material)
                 .name(section.getString("name", ""))
                 .lore(List.copyOf(section.getStringList("lore")))
-                .slot(section.getInt("slot", 0))
+                .slot(section.getInt("slot"))
                 .id(key)
                 .head(section.getString("head"))
                 .amount(Math.max(1, section.getInt("amount", 1)))

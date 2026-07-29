@@ -32,13 +32,17 @@ public final class GuiUtil {
         String name = Placeholders.apply(data.getName(), wrapped);
         List<String> lore = Placeholders.apply(data.getLore(), wrapped);
 
-        ItemStack item = ItemBuilder
-                .from(new ItemStack(data.getMaterial(), Math.max(1, data.getAmount())))
-                .name(Color.colorComponent(name))
-                .lore(lore.stream().map(Color::colorComponent).toList())
-                .model(data.getCustomModelData())
-                .glow(data.isGlow())
-                .build();
+        ItemBuilder itemBuilder = ItemBuilder.from(new ItemStack(data.getMaterial(), Math.max(1, data.getAmount())));
+
+        if (!data.getName().isBlank()) itemBuilder.name(Color.colorComponent(name));
+
+        if (!data.getLore().isEmpty()) itemBuilder.lore(lore.stream().map(Color::colorComponent).toList());
+
+        if (data.getCustomModelData() != null) itemBuilder.model(data.getCustomModelData());
+
+        itemBuilder.glow(data.isGlow());
+
+        ItemStack item = itemBuilder.build();
 
         if (data.getMaterial() == Material.PLAYER_HEAD && data.getHead() != null) {
             applySkullTexture(item, data.getHead());
