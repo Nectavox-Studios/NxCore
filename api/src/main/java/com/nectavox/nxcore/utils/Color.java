@@ -2,6 +2,7 @@ package com.nectavox.nxcore.utils;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -48,7 +49,8 @@ public final class Color {
 
         text = replaceHex(text);
 
-        return MINI_MESSAGE.deserialize(text, resolvers);
+        return MINI_MESSAGE.deserialize(text, resolvers)
+                .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
 
     public static Component parseLegacy(String text) {
@@ -72,7 +74,8 @@ public final class Color {
             return Component.empty();
         }
 
-        return MINI_MESSAGE.deserialize(text);
+        return MINI_MESSAGE.deserialize(text)
+                .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
 
     private static String replaceHex(String text) {
