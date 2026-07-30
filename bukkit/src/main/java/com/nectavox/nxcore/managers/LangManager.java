@@ -38,7 +38,11 @@ public class LangManager {
     }
 
     public void sendMessage(Player player, String lang, boolean color, boolean prefix, Object... replacements) {
-        plugin.getAudience().sendMessage(player, getComponent(lang, color, prefix, replacements));
+        String[] split = resolveText(lang, prefix, replacements).split("\n");
+
+        for (String string : split) {
+            plugin.getAudience().sendMessage(player, color ? Color.colorComponent(string) : Component.text(string));
+        }
     }
 
     private String resolveText(String lang, boolean prefix, Object... replacements) {
