@@ -12,16 +12,19 @@ public class PaperAudienceProvider implements AudienceProvider {
 
     @Override
     public void sendMessage(CommandSender sender, Component component) {
+        if (isEmpty(component)) return;
         sender.sendMessage(component);
     }
 
     @Override
     public void sendMessage(Player player, Component component) {
+        if (isEmpty(component)) return;
         player.sendMessage(component);
     }
 
     @Override
     public void sendActionBar(Player player, Component component) {
+        if (isEmpty(component)) return;
         player.sendActionBar(component);
     }
 
