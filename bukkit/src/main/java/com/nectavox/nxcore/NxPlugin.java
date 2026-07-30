@@ -1,6 +1,7 @@
 package com.nectavox.nxcore;
 
 import com.nectavox.nxcore.audience.PaperAudienceProvider;
+import com.nectavox.nxcore.coommands.CommandManager;
 import com.nectavox.nxcore.interfaces.AudienceProvider;
 import com.nectavox.nxcore.interfaces.SchedulerAdapter;
 import com.nectavox.nxcore.managers.LangManager;
@@ -20,6 +21,7 @@ public abstract class NxPlugin extends JavaPlugin {
     private MenuManager menuManager;
     private SchedulerAdapter scheduler;
     private AudienceProvider audience;
+    private CommandManager commandManager;
 
     @Override
     public final void onEnable() {
@@ -31,6 +33,8 @@ public abstract class NxPlugin extends JavaPlugin {
 
         menuManager = new MenuManager(this);
         menuManager.loadMenus(true);
+
+        commandManager = new CommandManager(this);
 
         if (isPaper()) {
             scheduler = new PaperScheduler(this);
