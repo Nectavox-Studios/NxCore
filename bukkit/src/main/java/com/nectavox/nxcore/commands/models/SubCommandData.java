@@ -1,14 +1,13 @@
-package com.nectavox.nxcore.coommands.models;
+package com.nectavox.nxcore.commands.models;
 
 import lombok.Value;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.Set;
 
 @Value
-public class CommandData {
-    String name;
+public class SubCommandData {
+    String value;
 
     Method method;
     Method completer;
@@ -21,5 +20,7 @@ public class CommandData {
 
     int cooldown;
 
-    Map<String, SubCommandData> subCommands;
+    int minArgs;
+
+    String usage;
 }

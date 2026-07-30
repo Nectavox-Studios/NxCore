@@ -1,4 +1,4 @@
-package com.nectavox.nxcore.coommands;
+package com.nectavox.nxcore.commands;
 
 import org.bukkit.command.CommandSender;
 

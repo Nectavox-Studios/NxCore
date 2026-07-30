@@ -1,4 +1,4 @@
-package com.nectavox.nxcore.coommands.annotation;
+package com.nectavox.nxcore.commands.annotation.access;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,9 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Command {
-    String name();
-
-    int cooldown() default 0;
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface OpOnly {
 }

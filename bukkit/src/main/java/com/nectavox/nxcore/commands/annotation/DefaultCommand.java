@@ -1,4 +1,4 @@
-package com.nectavox.nxcore.coommands.annotation;
+package com.nectavox.nxcore.commands.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

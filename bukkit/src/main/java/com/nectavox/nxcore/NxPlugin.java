@@ -1,7 +1,7 @@
 package com.nectavox.nxcore;
 
 import com.nectavox.nxcore.audience.PaperAudienceProvider;
-import com.nectavox.nxcore.coommands.CommandManager;
+import com.nectavox.nxcore.commands.CommandManager;
 import com.nectavox.nxcore.interfaces.AudienceProvider;
 import com.nectavox.nxcore.interfaces.SchedulerAdapter;
 import com.nectavox.nxcore.managers.LangManager;

@@ -1,13 +1,18 @@
-package com.nectavox.nxcore.coommands.annotation;
+package com.nectavox.nxcore.commands.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Completer {
+public @interface SubCommand {
     String value();
+
+    String usage() default "";
+
+    int minArgs() default 0;
+
+    int cooldown() default 0;
 }
