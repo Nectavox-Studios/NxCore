@@ -1,21 +1,23 @@
 package com.nectavox.nxcore.managers;
 
 import com.nectavox.nxcore.NxPlugin;
+import com.nectavox.nxcore.models.CustomModelDataData;
+import com.nectavox.nxcore.models.EnchantData;
 import com.nectavox.nxcore.models.GuiData;
 import com.nectavox.nxcore.models.GuiItemData;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -131,30 +133,54 @@ public class MenuManager {
         return new GuiData(title, rows, itemsPerPage, items);
     }
 
+    private static final Set<String> RESERVED_KEYS = Set.of(
+            "material",
+            "name",
+            "lore",
+            "slot",
+            "head",
+            "amount",
+            "glow",
+            "custom-model-data",
+            "item-model",
+            "unbreakable",
+            "enchants",
+            "item-flags",
+            "color",
+            "sound"
+    );
+
     private GuiItemData parseItem(ConfigurationSection itemSec, String key, File file) {
+
         ConfigurationSection section = itemSec.getConfigurationSection(key);
+
         if (section == null) {
-            plugin.getLogger().warning("Item '" + key + "' in " + file.getName() + " is invalid, skipping.");
+            plugin.getLogger().warning(
+                    "Item '" + key + "' in " + file.getName() + " is invalid, skipping."
+            );
             return null;
         }
 
         Material material = Material.AIR;
+
         String materialName = section.getString("material");
+
         if (materialName != null) {
             try {
                 material = Material.valueOf(materialName.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                plugin.getLogger().warning("Invalid material '" + materialName + "' for '" + key + "' in " + file.getName());
+            } catch (IllegalArgumentException ex) {
+                plugin.getLogger().warning("[Menu: " + file.getName() + "] " + "Item '" + key + "' " + "has invalid material: " + materialName);
             }
         }
 
         Sound sound = null;
+
         String soundName = section.getString("sound");
 
         if (soundName != null && !soundName.isBlank()) {
             try {
                 sound = Sound.valueOf(soundName.toUpperCase());
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException ex) {
                 plugin.getLogger().warning(
                         "Invalid sound '" + soundName + "' for '" + key + "' in " + file.getName()
                 );
@@ -164,20 +190,20 @@ public class MenuManager {
         Map<String, Object> extraData = new ConcurrentHashMap<>();
 
         for (String path : section.getKeys(false)) {
-            if (Set.of(
-                    "material",
-                    "name",
-                    "lore",
-                    "slot",
-                    "head",
-                    "amount",
-                    "glow",
-                    "custom-model-data"
-            ).contains(path)) {
+
+            if (RESERVED_KEYS.contains(path)) {
                 continue;
             }
 
             extraData.put(path, section.get(path));
+        }
+
+        CustomModelDataData cmdData = parseCustomModelData(section);
+
+        Integer legacyCmd = null;
+
+        if (section.contains("custom-model-data") && !section.isConfigurationSection("custom-model-data")) {
+            legacyCmd = section.getInt("custom-model-data");
         }
 
         return GuiItemData.builder()
@@ -189,10 +215,137 @@ public class MenuManager {
                 .head(section.getString("head"))
                 .amount(Math.max(1, section.getInt("amount", 1)))
                 .glow(section.getBoolean("glow", false))
-                .customModelData(section.contains("custom-model-data") ? section.getInt("custom-model-data") : null)
-                .data(extraData)
+                .customModelData(legacyCmd)
+                .customModelDataComponent(cmdData)
+                .itemModel(section.getString("item-model"))
+                .unbreakable(section.getBoolean("unbreakable", false))
+                .enchants(parseEnchants(section, key, file))
+                .itemFlags(parseItemFlags(section, key, file))
+                .color(parseColor(section, key, file))
                 .sound(sound)
+                .data(extraData)
                 .build();
+    }
+
+    private CustomModelDataData parseCustomModelData(
+            ConfigurationSection section
+    ) {
+
+        ConfigurationSection cmdSection =
+                section.getConfigurationSection("custom-model-data");
+
+        if (cmdSection == null) {
+            return null;
+        }
+
+        return CustomModelDataData.builder()
+                .floats(cmdSection.getDoubleList("floats")
+                        .stream()
+                        .map(Double::floatValue)
+                        .toList())
+                .strings(cmdSection.getStringList("strings"))
+                .flags(parseBooleanList(cmdSection))
+                .colors(cmdSection.getIntegerList("colors"))
+                .build();
+    }
+
+    private List<Boolean> parseBooleanList(
+            ConfigurationSection section
+    ) {
+        List<Boolean> booleans = new ArrayList<>();
+
+        for (Object obj : section.getList("flags", List.of())) {
+
+            if (obj instanceof Boolean bool) {
+                booleans.add(bool);
+                continue;
+            }
+            booleans.add(Boolean.parseBoolean(String.valueOf(obj)));
+        }
+
+        return booleans;
+    }
+
+    private Set<ItemFlag> parseItemFlags(
+            ConfigurationSection section,
+            String key,
+            File file
+    ) {
+
+        Set<ItemFlag> flags = EnumSet.noneOf(ItemFlag.class);
+
+        for (String flagName : section.getStringList("item-flags")) {
+            try {
+                flags.add(ItemFlag.valueOf(flagName.toUpperCase()));
+            } catch (IllegalArgumentException ex) {
+                plugin.getLogger().warning("[Menu: " + file.getName() + "] " + "Item '" + key + "' " + "contains invalid ItemFlag: " + flagName);
+            }
+        }
+
+        return flags;
+    }
+
+    private List<EnchantData> parseEnchants(
+            ConfigurationSection section,
+            String key,
+            File file
+    ) {
+
+        List<EnchantData> enchants = new ArrayList<>();
+
+        for (String line : section.getStringList("enchants")) {
+
+            try {
+                String[] split = line.split(":");
+
+                if (split.length != 2) {
+                    plugin.getLogger().warning("[Menu: " + file.getName() + "] " + "Invalid enchant format in item '" + key + "': " + line);
+                    continue;
+                }
+
+                Enchantment enchant = Enchantment.getByName(split[0].toUpperCase());
+
+                if (enchant == null) {
+                    plugin.getLogger().warning("[Menu: " + file.getName() + "] " + "Unknown enchantment '" + split[0] + "' in item '" + key + "'");
+                    continue;
+                }
+
+                int level = Integer.parseInt(split[1]);
+                enchants.add(new EnchantData(enchant, level));
+
+            } catch (Exception ex) {
+                plugin.getLogger().warning("[Menu: " + file.getName() + "] " + "Failed to parse enchant '" + line + "' in item '" + key + "'");
+            }
+        }
+
+        return enchants;
+    }
+
+    private org.bukkit.Color parseColor(
+            ConfigurationSection section,
+            String key,
+            File file
+    ) {
+
+        String color = section.getString("color");
+        if (color == null) return null;
+
+        try {
+            String[] split = color.split(",");
+
+            if (split.length != 3) {
+                return null;
+            }
+
+            return Color.fromRGB(
+                    Integer.parseInt(split[0].trim()),
+                    Integer.parseInt(split[1].trim()),
+                    Integer.parseInt(split[2].trim())
+            );
+        } catch (Exception ex) {
+            plugin.getLogger().warning("[Menu: " + file.getName() + "] " + "Invalid RGB color for item '" + key + "': " + color);
+            return null;
+        }
     }
 
     private static int clamp(int value, int min, int max) {
