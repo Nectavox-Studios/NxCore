@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 public final class GuiUtil {
 
-    public void buildItem(Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<GuiItemData> action, Object... replacements) {
+    public static void buildItem(Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<GuiItemData> action, Object... replacements) {
         GuiItemData itemData = guiData.getItem(key);
         if (itemData != null && itemData.getSlot() >= 0) {
 
@@ -37,7 +37,7 @@ public final class GuiUtil {
         }
     }
 
-    public void buildSkullItem(OfflinePlayer skullOfPlayer, Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<GuiItemData> action, Object... replacements) {
+    public static void buildSkullItem(OfflinePlayer skullOfPlayer, Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<GuiItemData> action, Object... replacements) {
         GuiItemData itemData = guiData.getItem(key);
         if (itemData != null && itemData.getSlot() >= 0) {
 
