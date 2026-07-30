@@ -5,6 +5,7 @@ import com.nectavox.nxcore.utils.Color;
 import com.nectavox.nxcore.utils.Placeholders;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -37,11 +38,11 @@ public class LangManager {
         return color ? Color.colorComponent(text) : Component.text(text);
     }
 
-    public void sendMessage(Player player, String lang, boolean color, boolean prefix, Object... replacements) {
+    public void sendMessage(CommandSender sender, String lang, boolean color, boolean prefix, Object... replacements) {
         String[] split = resolveText(lang, prefix, replacements).split("\n");
 
         for (String string : split) {
-            plugin.getAudience().sendMessage(player, color ? Color.colorComponent(string) : Component.text(string));
+            plugin.getAudience().sendMessage(sender, color ? Color.colorComponent(string) : Component.text(string));
         }
     }
 

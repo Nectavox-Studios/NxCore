@@ -10,8 +10,6 @@ public interface AudienceProvider {
 
     void sendMessage(CommandSender sender, Component component);
 
-    void sendMessage(Player player, Component component);
-
     void sendActionBar(Player player, Component component);
 
     void showTitle(Player player, Title title);

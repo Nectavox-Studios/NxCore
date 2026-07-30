@@ -22,12 +22,6 @@ public class SpigotAudienceProvider implements AudienceProvider {
     }
 
     @Override
-    public void sendMessage(Player player, Component component) {
-        if (isEmpty(component)) return;
-        audiences.player(player).sendMessage(component);
-    }
-
-    @Override
     public void sendActionBar(Player player, Component component) {
         if (isEmpty(component)) return;
         audiences.player(player).sendActionBar(component);
