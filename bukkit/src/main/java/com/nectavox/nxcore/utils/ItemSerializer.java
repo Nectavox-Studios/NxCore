@@ -106,10 +106,8 @@ public final class ItemSerializer {
 
     private static void applyColor(
             ItemMeta meta,
-            String colorString
+            org.bukkit.Color color
     ) {
-
-        org.bukkit.Color color = ColorParser.parse(colorString);
 
         if (color == null) {
             return;

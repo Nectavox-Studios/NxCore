@@ -37,6 +37,10 @@ public class LangManager {
         return color ? Color.colorComponent(text) : Component.text(text);
     }
 
+    public void sendMessage(Player player, String lang, boolean color, boolean prefix, Object... replacements) {
+        plugin.getAudience().sendMessage(player, getComponent(lang, color, prefix, replacements));
+    }
+
     private String resolveText(String lang, boolean prefix, Object... replacements) {
         if (!languages.containsKey(lang)) {
             plugin.getLogger().log(Level.WARNING, "Missing language key: " + lang);
