@@ -39,10 +39,15 @@ public class LangManager {
     }
 
     public void sendMessage(CommandSender sender, String lang, boolean color, boolean prefix, Object... replacements) {
-        String[] split = resolveText(lang, prefix, replacements).split("\n");
+        String[] split = resolveText(lang, false, replacements).split("\n");
 
         for (String string : split) {
-            plugin.getAudience().sendMessage(sender, color ? Color.colorComponent(string) : Component.text(string));
+            String text = string;
+            if (prefix) {
+                text = languages.getOrDefault(PREFIX_KEY, "") + text;
+            }
+
+            plugin.getAudience().sendMessage(sender, color ? Color.colorComponent(text) : Component.text(text));
         }
     }
 

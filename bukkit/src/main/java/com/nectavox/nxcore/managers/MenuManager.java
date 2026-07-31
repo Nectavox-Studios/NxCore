@@ -245,7 +245,7 @@ public class MenuManager {
                         .toList())
                 .strings(cmdSection.getStringList("strings"))
                 .flags(parseBooleanList(cmdSection))
-                .colors(cmdSection.getIntegerList("colors"))
+                .colors(parseColors(cmdSection))
                 .build();
     }
 
@@ -319,6 +319,25 @@ public class MenuManager {
         }
 
         return enchants;
+    }
+
+    private List<Integer> parseColors(ConfigurationSection section) {
+        List<Integer> colors = new ArrayList<>();
+
+        for (String color : section.getStringList("colors")) {
+            try {
+                String[] split = color.split(",");
+
+                int r = Integer.parseInt(split[0].trim());
+                int g = Integer.parseInt(split[1].trim());
+                int b = Integer.parseInt(split[2].trim());
+
+                colors.add(Color.fromRGB(r, g, b).asRGB());
+            } catch (Exception ignored) {
+            }
+        }
+
+        return colors;
     }
 
     private org.bukkit.Color parseColor(
