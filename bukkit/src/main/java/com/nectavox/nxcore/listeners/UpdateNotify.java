@@ -27,7 +27,7 @@ public class UpdateNotify implements Listener {
 
     private void sendUpdateMessage(Player player, String pluginName, String currentVersion, String newVersion) {
 
-        Component message = (Component) Component.text()
+        Component message = Component.text()
                 .append(Component.newline())
                 .append(
                         MiniMessage.miniMessage().deserialize(
@@ -53,7 +53,8 @@ public class UpdateNotify implements Listener {
                                         )
                                 )
                 )
-                .append(Component.newline());
+                .append(Component.newline())
+                .build();
 
         plugin.getAudience().sendMessage(player, message);
     }
