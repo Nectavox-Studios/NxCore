@@ -119,16 +119,30 @@ public abstract class NxPlugin extends JavaPlugin {
 
             JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
 
-            if (!json.has("latest_version") || !json.has("version")) {
+            if (!json.has("data")) {
                 return;
             }
 
-            isLastVersion = json.get("version").getAsString().equals(getDescription().getVersion());
+            JsonObject data = json.getAsJsonObject("data");
 
-            if (!isLastVersion) {
-                this.newVersion = json.get("latest_version").getAsString();
+            if (!data.has("latest_version")) {
+                return;
             }
 
+            String latestVersion = data.get("latest_version").getAsString();
+
+            isLastVersion = latestVersion.equals(getDescription().getVersion());
+
+            if (!isLastVersion) {
+                this.newVersion = latestVersion;
+
+                getLogger().warning(
+                        "A new update is available! " +
+                                getDescription().getName() +
+                                " " + getDescription().getVersion() +
+                                " -> " + newVersion
+                );
+            }
         } catch (IOException | InterruptedException e) {
             getLogger().warning("Failed to check for update.");
         }

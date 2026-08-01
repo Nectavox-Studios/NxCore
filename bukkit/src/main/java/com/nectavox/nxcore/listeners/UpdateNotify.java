@@ -31,25 +31,24 @@ public class UpdateNotify implements Listener {
                 .append(Component.newline())
                 .append(
                         MiniMessage.miniMessage().deserialize(
-                                "<gradient:#a120f7:#cc20f7>" + pluginName + "</gradient> <gray>» A new update is available!"
+                                " <gradient:#a120f7:#cc20f7>" + pluginName + "</gradient> <gray>» A new update is available!"
                         )
                 )
                 .append(Component.newline())
-                .append(Component.text("Current Version: ").color(NamedTextColor.GRAY))
-                .append(Component.text(currentVersion).color(NamedTextColor.WHITE))
-                .append(Component.newline())
-                .append(Component.text("New Version: ").color(NamedTextColor.GRAY))
-                .append(Component.text(newVersion + " ↑").color(NamedTextColor.GREEN))
+                .append(Component.space())
+                .append(Component.text(currentVersion).color(NamedTextColor.RED))
+                .append(Component.text(" ➜ ").color(NamedTextColor.AQUA))
+                .append(Component.text(newVersion).color(NamedTextColor.GREEN))
                 .append(Component.newline())
                 .append(Component.newline())
                 .append(
-                        Component.text("[DOWNLOAD]")
+                        Component.text(" [Download]")
                                 .color(NamedTextColor.LIGHT_PURPLE)
                                 .clickEvent(ClickEvent.openUrl("https://nectavox.com/resources/" + pluginName.toLowerCase()))
                                 .hoverEvent(
                                         HoverEvent.showText(
                                                 Component.text("Click to download the latest version")
-                                                        .color(NamedTextColor.GREEN)
+                                                        .color(NamedTextColor.LIGHT_PURPLE)
                                         )
                                 )
                 )
