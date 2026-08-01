@@ -1,9 +1,12 @@
 package com.nectavox.nxcore;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.nectavox.nxcore.audience.PaperAudienceProvider;
 import com.nectavox.nxcore.commands.CommandManager;
 import com.nectavox.nxcore.interfaces.AudienceProvider;
 import com.nectavox.nxcore.interfaces.SchedulerAdapter;
+import com.nectavox.nxcore.listeners.UpdateNotify;
 import com.nectavox.nxcore.managers.LangManager;
 import com.nectavox.nxcore.managers.MenuManager;
 import com.nectavox.nxcore.audience.SpigotAudienceProvider;
@@ -11,7 +14,16 @@ import com.nectavox.nxcore.schedulers.PaperScheduler;
 import com.nectavox.nxcore.schedulers.SpigotScheduler;
 import com.nectavox.nxcore.utils.ConfigUtil;
 import lombok.Getter;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @Getter
 public abstract class NxPlugin extends JavaPlugin {
@@ -44,7 +56,13 @@ public abstract class NxPlugin extends JavaPlugin {
             audience = new SpigotAudienceProvider(this);
         }
 
+        getServer().getPluginManager().registerEvents(new UpdateNotify(this), this);
+
         this.enable();
+
+        if (getConfig().getBoolean("check-update")) {
+            checkForUpdate();
+        }
     }
 
     @Override
@@ -75,6 +93,45 @@ public abstract class NxPlugin extends JavaPlugin {
 
     protected void reload() {
 
+    }
+
+    public boolean isLastVersion = true;
+    public String newVersion = "1.0";
+
+    public void checkForUpdate() {
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://nectavox.com/api/resource/" + getDescription().getName().toLowerCase() + "/check-update"))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = client.send(
+                    request,
+                    HttpResponse.BodyHandlers.ofString()
+            );
+
+            if (response.statusCode() != 200) {
+                getLogger().warning("Failed to check update. Status: " + response.statusCode());
+                return;
+            }
+
+            JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
+
+            if (!json.has("latest_version") || !json.has("version")) {
+                return;
+            }
+
+            isLastVersion = json.get("version").getAsString().equals(getDescription().getVersion());
+
+            if (!isLastVersion) {
+                this.newVersion = json.get("latest_version").getAsString();
+            }
+
+        } catch (IOException | InterruptedException e) {
+            getLogger().warning("Failed to check for update.");
+        }
     }
 
     public static boolean isPaper() {

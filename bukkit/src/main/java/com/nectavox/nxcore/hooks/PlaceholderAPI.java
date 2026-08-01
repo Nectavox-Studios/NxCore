@@ -1,4 +1,4 @@
-package com.nectavox.nxcore.utils;
+package com.nectavox.nxcore.hooks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
