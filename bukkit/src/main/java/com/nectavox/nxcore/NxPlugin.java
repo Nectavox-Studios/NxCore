@@ -1,5 +1,6 @@
 package com.nectavox.nxcore;
 
+import com.github.retrooper.packetevents.PacketEvents;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.nectavox.nxcore.audience.PaperAudienceProvider;
@@ -13,6 +14,7 @@ import com.nectavox.nxcore.audience.SpigotAudienceProvider;
 import com.nectavox.nxcore.schedulers.PaperScheduler;
 import com.nectavox.nxcore.schedulers.SpigotScheduler;
 import com.nectavox.nxcore.utils.ConfigUtil;
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,6 +39,10 @@ public abstract class NxPlugin extends JavaPlugin {
 
     @Override
     public final void onEnable() {
+
+        if (isUsingPacketEvent()) {
+            PacketEvents.getAPI().init();
+        }
 
         configUtil = new ConfigUtil(this);
 
@@ -70,11 +76,20 @@ public abstract class NxPlugin extends JavaPlugin {
 
     @Override
     public final void onDisable() {
+        if (isUsingPacketEvent()) {
+            PacketEvents.getAPI().terminate();
+        }
+
         this.disable();
     }
 
     @Override
     public final void onLoad() {
+        if (isUsingPacketEvent()) {
+            PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+            PacketEvents.getAPI().load();
+        }
+
         this.load();
     }
 
@@ -108,6 +123,10 @@ public abstract class NxPlugin extends JavaPlugin {
 
     public boolean isMenuManagerEnable() {
         return true;
+    }
+
+    public boolean isUsingPacketEvent() {
+        return false;
     }
 
     public boolean isLastVersion = true;

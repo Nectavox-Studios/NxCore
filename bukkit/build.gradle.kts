@@ -11,4 +11,6 @@ dependencies {
 
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.12.3")
+
+    compileOnly("com.github.retrooper:packetevents-spigot:2.13.0")
 }

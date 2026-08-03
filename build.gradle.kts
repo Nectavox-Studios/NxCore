@@ -23,6 +23,8 @@ allprojects {
         maven("https://repo.papermc.io/repository/maven-public/") { name = "PaperMC" }
         maven("https://repo.helpch.at/releases/") { name = "PlaceholderAPI" }
         maven("https://jitpack.io/") { name = "JitPack" }
+        maven("https://repo.codemc.io/repository/maven-releases/")
+        maven("https://repo.codemc.io/repository/maven-snapshots/")
     }
 
 
