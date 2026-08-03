@@ -40,11 +40,15 @@ public abstract class NxPlugin extends JavaPlugin {
 
         configUtil = new ConfigUtil(this);
 
-        langManager = new LangManager(this);
-        langManager.load(true);
+        if (isLangManagerEnable()) {
+            langManager = new LangManager(this);
+            langManager.load(true);
+        }
 
-        menuManager = new MenuManager(this);
-        menuManager.loadMenus(true);
+        if (isMenuManagerEnable()) {
+            menuManager = new MenuManager(this);
+            menuManager.loadMenus(true);
+        }
 
         commandManager = new CommandManager(this);
 
@@ -56,11 +60,10 @@ public abstract class NxPlugin extends JavaPlugin {
             audience = new SpigotAudienceProvider(this);
         }
 
-        getServer().getPluginManager().registerEvents(new UpdateNotify(this), this);
-
         this.enable();
 
-        if (getConfig().getBoolean("check-update")) {
+        if (getConfig().getBoolean("check-update") && isCheckForUpdateEnable()) {
+            getServer().getPluginManager().registerEvents(new UpdateNotify(this), this);
             checkForUpdate();
         }
     }
@@ -93,6 +96,18 @@ public abstract class NxPlugin extends JavaPlugin {
 
     protected void reload() {
 
+    }
+
+    public boolean isCheckForUpdateEnable() {
+        return true;
+    }
+
+    public boolean isLangManagerEnable() {
+        return true;
+    }
+
+    public boolean isMenuManagerEnable() {
+        return true;
     }
 
     public boolean isLastVersion = true;
