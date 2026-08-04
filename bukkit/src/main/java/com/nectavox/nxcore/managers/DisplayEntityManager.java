@@ -38,8 +38,8 @@ public class DisplayEntityManager {
                     if (distSq <= viewDistanceSq) {
                         if (!isSeeing) {
                             spawnFor(player, data);
-                        } else if (data instanceof TextDisplayData) {
-                            sendMetadata(player, (TextDisplayData) data);
+                        } else if (data instanceof TextDisplayData textDisplayData) {
+                            sendMetadata(player, textDisplayData);
                         }
                     } else if (isSeeing) {
                         destroyFor(player, data);
