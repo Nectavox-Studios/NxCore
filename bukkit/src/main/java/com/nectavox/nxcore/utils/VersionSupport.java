@@ -1,7 +1,7 @@
 package com.nectavox.nxcore.utils;
 
 
-import com.nectavox.nxcore.models.CustomModelDataData;
+import com.nectavox.nxcore.models.item.CustomModelDataData;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.meta.ItemMeta;
 

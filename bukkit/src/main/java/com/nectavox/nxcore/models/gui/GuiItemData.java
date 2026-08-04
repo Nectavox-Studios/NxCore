@@ -1,5 +1,7 @@
-package com.nectavox.nxcore.models;
+package com.nectavox.nxcore.models.gui;
 
+import com.nectavox.nxcore.models.item.CustomModelDataData;
+import com.nectavox.nxcore.models.item.EnchantData;
 import lombok.Builder;
 import lombok.Data;
 import org.bukkit.Material;
