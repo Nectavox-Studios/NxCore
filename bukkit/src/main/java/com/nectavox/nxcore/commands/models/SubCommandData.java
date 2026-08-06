@@ -3,6 +3,7 @@ package com.nectavox.nxcore.commands.models;
 import lombok.Value;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Set;
 
 @Value
@@ -10,6 +11,7 @@ public class SubCommandData {
     String value;
 
     Method method;
+    Parameter[] parameters;
     Method completer;
 
     Set<String> permissions;
