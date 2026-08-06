@@ -1,10 +1,10 @@
 package com.nectavox.nxcore.managers;
 
 import com.nectavox.nxcore.NxPlugin;
-import com.nectavox.nxcore.models.CustomModelDataData;
-import com.nectavox.nxcore.models.EnchantData;
-import com.nectavox.nxcore.models.GuiData;
-import com.nectavox.nxcore.models.GuiItemData;
+import com.nectavox.nxcore.models.item.CustomModelDataData;
+import com.nectavox.nxcore.models.item.EnchantData;
+import com.nectavox.nxcore.models.gui.GuiData;
+import com.nectavox.nxcore.models.gui.GuiItemData;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.Material;
