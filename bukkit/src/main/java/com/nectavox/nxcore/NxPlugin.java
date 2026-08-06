@@ -8,6 +8,7 @@ import com.nectavox.nxcore.commands.CommandManager;
 import com.nectavox.nxcore.interfaces.AudienceProvider;
 import com.nectavox.nxcore.interfaces.SchedulerAdapter;
 import com.nectavox.nxcore.listeners.UpdateNotify;
+import com.nectavox.nxcore.managers.DisplayEntityManager;
 import com.nectavox.nxcore.managers.LangManager;
 import com.nectavox.nxcore.managers.MenuManager;
 import com.nectavox.nxcore.audience.SpigotAudienceProvider;
@@ -26,6 +27,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.logging.Level;
 
 @Getter
 public abstract class NxPlugin extends JavaPlugin {
@@ -36,12 +38,15 @@ public abstract class NxPlugin extends JavaPlugin {
     private SchedulerAdapter scheduler;
     private AudienceProvider audience;
     private CommandManager commandManager;
+    private DisplayEntityManager displayEntityManager;
 
     @Override
     public final void onEnable() {
 
         if (isUsingPacketEvent()) {
             PacketEvents.getAPI().init();
+
+            displayEntityManager = new DisplayEntityManager(this);
         }
 
         configUtil = new ConfigUtil(this);
@@ -86,12 +91,25 @@ public abstract class NxPlugin extends JavaPlugin {
     @Override
     public final void onLoad() {
         if (isUsingPacketEvent()) {
-            PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
-            PacketEvents.getAPI().load();
+            if (getServer().getPluginManager().getPlugin("packetevents") == null) {
+                getLogger().log(Level.SEVERE, "PacketEvents plugin not found! Disabling " + getName());
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+
+            try {
+                PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+                PacketEvents.getAPI().load();
+            } catch (Exception e) {
+                getLogger().log(Level.SEVERE, "Failed to load PacketEvents API!", e);
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
         }
 
         this.load();
     }
+
 
     public void enable() {
     }

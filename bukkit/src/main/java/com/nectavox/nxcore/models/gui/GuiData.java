@@ -1,4 +1,4 @@
-package com.nectavox.nxcore.models;
+package com.nectavox.nxcore.models.gui;
 
 import lombok.Value;
 

@@ -1,13 +1,10 @@
 package com.nectavox.nxcore.utils;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
-import com.nectavox.nxcore.models.GuiData;
-import com.nectavox.nxcore.models.GuiItemData;
+import com.nectavox.nxcore.models.gui.GuiData;
+import com.nectavox.nxcore.models.gui.GuiItemData;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
 import dev.triumphteam.gui.guis.GuiItem;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -15,8 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 public final class GuiUtil {
