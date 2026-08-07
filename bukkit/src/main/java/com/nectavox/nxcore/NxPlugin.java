@@ -42,6 +42,13 @@ public abstract class NxPlugin extends JavaPlugin {
 
     @Override
     public final void onEnable() {
+        if (isPaper()) {
+            scheduler = new PaperScheduler(this);
+            audience = new PaperAudienceProvider();
+        } else {
+            scheduler = new SpigotScheduler(this);
+            audience = new SpigotAudienceProvider(this);
+        }
 
         if (isUsingPacketEvent()) {
             PacketEvents.getAPI().init();
@@ -62,14 +69,6 @@ public abstract class NxPlugin extends JavaPlugin {
         }
 
         commandManager = new CommandManager(this);
-
-        if (isPaper()) {
-            scheduler = new PaperScheduler(this);
-            audience = new PaperAudienceProvider();
-        } else {
-            scheduler = new SpigotScheduler(this);
-            audience = new SpigotAudienceProvider(this);
-        }
 
         this.enable();
 
