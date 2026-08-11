@@ -64,7 +64,6 @@ subprojects {
         mergeServiceFiles()
 
         relocate("dev.triumphteam.gui", "com.nectavox.nxcore.libs.gui")
-        relocate("net.kyori", "com.nectavox.nxcore.libs.kyori")
     }
 }
 

@@ -18,6 +18,7 @@ import com.nectavox.nxcore.utils.ConfigUtil;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.IronGolem;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
