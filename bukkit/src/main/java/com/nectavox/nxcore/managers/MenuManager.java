@@ -143,6 +143,9 @@ public class MenuManager {
             "glow",
             "custom-model-data",
             "item-model",
+            "tooltip-style",
+            "hide-tooltip",
+            "rarity",
             "unbreakable",
             "enchants",
             "item-flags",
@@ -210,7 +213,7 @@ public class MenuManager {
                 .material(material)
                 .name(section.getString("name", ""))
                 .lore(List.copyOf(section.getStringList("lore")))
-                .slot(section.getInt("slot"))
+                .slots(parseSlots(section, key, file))
                 .id(key)
                 .head(section.getString("head"))
                 .amount(Math.max(1, section.getInt("amount", 1)))
@@ -218,6 +221,9 @@ public class MenuManager {
                 .customModelData(legacyCmd)
                 .customModelDataComponent(cmdData)
                 .itemModel(section.getString("item-model"))
+                .tooltipStyle(section.getString("tooltip-style"))
+                .hideTooltip(section.getBoolean("hide-tooltip", false))
+                .rarity(section.getString("rarity"))
                 .unbreakable(section.getBoolean("unbreakable", false))
                 .enchants(parseEnchants(section, key, file))
                 .itemFlags(parseItemFlags(section, key, file))
@@ -225,6 +231,77 @@ public class MenuManager {
                 .sound(sound)
                 .data(extraData)
                 .build();
+    }
+
+    private List<Integer> parseSlots(ConfigurationSection section, String key, File file) {
+        Object value = section.get("slot");
+
+        if (value == null) {
+            return List.of();
+        }
+
+        if (value instanceof List<?> list) {
+            List<Integer> slots = new ArrayList<>();
+
+            for (Object obj : list) {
+                try {
+                    int slot = Integer.parseInt(String.valueOf(obj).trim());
+
+                    if (slot >= 0) {
+                        slots.add(slot);
+                    }
+                } catch (NumberFormatException ex) {
+                    plugin.getLogger().warning(
+                            "[Menu: " + file.getName() + "] " +
+                                    "Invalid slot '" + obj + "' for item '" + key + "'"
+                    );
+                }
+            }
+
+            return List.copyOf(slots);
+        }
+
+        String input = String.valueOf(value).trim();
+
+        if (input.isEmpty()) {
+            return List.of();
+        }
+
+        if (input.matches("\\d+\\s*-\\s*\\d+")) {
+            String[] split = input.split("\\s*-\\s*");
+
+            int start = Integer.parseInt(split[0]);
+            int end = Integer.parseInt(split[1]);
+
+            if (start > end) {
+                int temp = start;
+                start = end;
+                end = temp;
+            }
+
+            List<Integer> slots = new ArrayList<>();
+
+            for (int i = start; i <= end; i++) {
+                slots.add(i);
+            }
+
+            return List.copyOf(slots);
+        }
+
+        try {
+            int slot = Integer.parseInt(input);
+
+            if (slot >= 0) {
+                return List.of(slot);
+            }
+        } catch (NumberFormatException ex) {
+            plugin.getLogger().warning(
+                    "[Menu: " + file.getName() + "] " +
+                            "Invalid slot '" + input + "' for item '" + key + "'"
+            );
+        }
+
+        return List.of();
     }
 
     private CustomModelDataData parseCustomModelData(
@@ -266,20 +343,19 @@ public class MenuManager {
         return booleans;
     }
 
-    private Set<ItemFlag> parseItemFlags(
+    private Set<String> parseItemFlags(
             ConfigurationSection section,
             String key,
             File file
     ) {
+        Set<String> flags = new LinkedHashSet<>();
 
-        Set<ItemFlag> flags = EnumSet.noneOf(ItemFlag.class);
-
-        for (String flagName : section.getStringList("item-flags")) {
-            try {
-                flags.add(ItemFlag.valueOf(flagName.toUpperCase()));
-            } catch (IllegalArgumentException ex) {
-                plugin.getLogger().warning("[Menu: " + file.getName() + "] " + "Item '" + key + "' " + "contains invalid ItemFlag: " + flagName);
+        for (String flag : section.getStringList("item-flags")) {
+            if (flag == null || flag.isBlank()) {
+                continue;
             }
+
+            flags.add(flag.trim());
         }
 
         return flags;

@@ -66,9 +66,15 @@ public final class ItemSerializer {
 
         VersionSupport.applyCustomModelDataComponent(meta, data.getCustomModelDataComponent());
 
+        VersionSupport.applyTooltipStyle(meta, data.getTooltipStyle());
+
+        VersionSupport.applyHideTooltip(meta, data.isHideTooltip());
+
+        VersionSupport.applyRarity(meta, data.getRarity());
+
         meta.setUnbreakable(data.isUnbreakable());
 
-        applyFlags(meta, data.getItemFlags());
+        VersionSupport.applyItemFlags(meta, data.getItemFlags());
 
         applyEnchantments(meta, data.getEnchants());
 
@@ -81,15 +87,6 @@ public final class ItemSerializer {
         item.setItemMeta(meta);
 
         return item;
-    }
-
-    private static void applyFlags(
-            ItemMeta meta,
-            Set<ItemFlag> flags
-    ) {
-        for (ItemFlag flag : flags) {
-            meta.addItemFlags(flag);
-        }
     }
 
     private static void applyEnchantments(

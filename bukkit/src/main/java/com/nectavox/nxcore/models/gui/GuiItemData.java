@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.inventory.ItemFlag;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,8 @@ public class GuiItemData {
     @Builder.Default
     private List<String> lore = List.of();
 
-    private int slot;
+    @Builder.Default
+    private List<Integer> slots = List.of();
 
     private String id;
 
@@ -50,10 +50,17 @@ public class GuiItemData {
     private List<EnchantData> enchants = List.of();
 
     @Builder.Default
-    private Set<ItemFlag> itemFlags = Set.of();
+    private Set<String> itemFlags = Set.of();
 
     private org.bukkit.Color color;
 
     @Builder.Default
     private Map<String, Object> data = Map.of();
+
+    private String tooltipStyle;
+
+    @Builder.Default
+    private boolean hideTooltip = false;
+
+    private String rarity;
 }
