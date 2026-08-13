@@ -226,7 +226,7 @@ public class MenuManager {
                 .rarity(section.getString("rarity"))
                 .unbreakable(section.getBoolean("unbreakable", false))
                 .enchants(parseEnchants(section, key, file))
-                .itemFlags(parseItemFlags(section, key, file))
+                .itemFlags(parseItemFlags(section))
                 .color(parseColor(section, key, file))
                 .sound(sound)
                 .data(extraData)
@@ -344,9 +344,7 @@ public class MenuManager {
     }
 
     private Set<String> parseItemFlags(
-            ConfigurationSection section,
-            String key,
-            File file
+            ConfigurationSection section
     ) {
         Set<String> flags = new LinkedHashSet<>();
 
