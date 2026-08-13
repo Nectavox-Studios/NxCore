@@ -52,8 +52,6 @@ public abstract class NxPlugin extends JavaPlugin {
         }
 
         if (isUsingPacketEvent()) {
-            PacketEvents.getAPI().init();
-
             displayEntityManager = new DisplayEntityManager(this);
         }
 
@@ -81,10 +79,6 @@ public abstract class NxPlugin extends JavaPlugin {
 
     @Override
     public final void onDisable() {
-        if (isUsingPacketEvent()) {
-            PacketEvents.getAPI().terminate();
-        }
-
         this.disable();
     }
 
@@ -93,15 +87,6 @@ public abstract class NxPlugin extends JavaPlugin {
         if (isUsingPacketEvent()) {
             if (getServer().getPluginManager().getPlugin("packetevents") == null) {
                 getLogger().log(Level.SEVERE, "PacketEvents plugin not found! Disabling " + getName());
-                getServer().getPluginManager().disablePlugin(this);
-                return;
-            }
-
-            try {
-                PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
-                PacketEvents.getAPI().load();
-            } catch (Exception e) {
-                getLogger().log(Level.SEVERE, "Failed to load PacketEvents API!", e);
                 getServer().getPluginManager().disablePlugin(this);
                 return;
             }
