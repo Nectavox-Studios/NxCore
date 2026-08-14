@@ -106,8 +106,12 @@ public abstract class NxPlugin extends JavaPlugin {
     }
 
     public final void reloadPlugin() {
-        langManager.load(false);
-        menuManager.loadMenus(false);
+        if (isLangManagerEnable()) {
+            langManager.load(false);
+        }
+        if (isMenuManagerEnable()) {
+            menuManager.loadMenus(false);
+        }
 
         reload();
     }
