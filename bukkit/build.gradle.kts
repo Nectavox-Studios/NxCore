@@ -9,7 +9,7 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.4.1")
     implementation("dev.triumphteam:triumph-gui:3.1.13")
 
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.12.3")
 
     compileOnly("com.github.retrooper:packetevents-spigot:2.13.0")

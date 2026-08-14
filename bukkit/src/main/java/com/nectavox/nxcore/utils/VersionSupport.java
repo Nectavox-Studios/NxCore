@@ -4,6 +4,7 @@ import com.nectavox.nxcore.models.item.CustomModelDataData;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -24,8 +25,10 @@ public final class VersionSupport {
         }
 
         try {
-            Method method = meta.getClass()
-                    .getMethod("setItemModel", NamespacedKey.class);
+            Method method = ItemMeta.class.getMethod(
+                    "setItemModel",
+                    NamespacedKey.class
+            );
 
             NamespacedKey key = NamespacedKey.fromString(model);
 
@@ -33,8 +36,9 @@ public final class VersionSupport {
                 method.invoke(meta, key);
             }
 
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 
@@ -49,8 +53,10 @@ public final class VersionSupport {
         }
 
         try {
-            Method method = meta.getClass()
-                    .getMethod("setTooltipStyle", NamespacedKey.class);
+            Method method = ItemMeta.class.getMethod(
+                    "setTooltipStyle",
+                    NamespacedKey.class
+            );
 
             NamespacedKey key = NamespacedKey.fromString(tooltipStyle);
 
@@ -58,8 +64,9 @@ public final class VersionSupport {
                 method.invoke(meta, key);
             }
 
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 
@@ -74,13 +81,16 @@ public final class VersionSupport {
         }
 
         try {
-            Method method = meta.getClass()
-                    .getMethod("setHideTooltip", boolean.class);
+            Method method = ItemMeta.class.getMethod(
+                    "setHideTooltip",
+                    boolean.class
+            );
 
             method.invoke(meta, true);
 
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 
@@ -105,13 +115,16 @@ public final class VersionSupport {
                     rarity.toUpperCase()
             );
 
-            Method method = meta.getClass()
-                    .getMethod("setRarity", rarityClass);
+            Method method = ItemMeta.class.getMethod(
+                    "setRarity",
+                    rarityClass
+            );
 
             method.invoke(meta, rarityValue);
 
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
+        } catch (ClassNotFoundException | NoSuchMethodException ignored) {
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 
@@ -127,10 +140,12 @@ public final class VersionSupport {
 
         try {
 
-            Method getComponent = meta.getClass()
-                    .getMethod("getCustomModelDataComponent");
+            Method getComponent = ItemMeta.class.getMethod(
+                    "getCustomModelDataComponent"
+            );
 
-            Object component = getComponent.invoke(meta);
+            CustomModelDataComponent component =
+                    (CustomModelDataComponent) getComponent.invoke(meta);
 
             if (component == null) {
                 return;
@@ -141,95 +156,125 @@ public final class VersionSupport {
             applyFlags(component, data.getFlags());
             applyColors(component, data.getColors());
 
-            Method setComponent = meta.getClass()
-                    .getMethod(
-                            "setCustomModelDataComponent",
-                            component.getClass()
-                    );
+            Method setComponent = ItemMeta.class.getMethod(
+                    "setCustomModelDataComponent",
+                    CustomModelDataComponent.class
+            );
 
             setComponent.invoke(meta, component);
 
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 
 
     private static void applyFloats(
-            Object component,
+            CustomModelDataComponent component,
             List<Float> values
     ) {
 
+        if (values == null || values.isEmpty()) {
+            return;
+        }
+
         try {
 
-            Method method = component.getClass()
-                    .getMethod("setFloats", List.class);
+            Method method = CustomModelDataComponent.class.getMethod(
+                    "setFloats",
+                    List.class
+            );
 
             method.invoke(component, values);
 
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 
 
     private static void applyStrings(
-            Object component,
+            CustomModelDataComponent component,
             List<String> values
     ) {
 
+        if (values == null || values.isEmpty()) {
+            return;
+        }
+
         try {
 
-            Method method = component.getClass()
-                    .getMethod("setStrings", List.class);
+            Method method = CustomModelDataComponent.class.getMethod(
+                    "setStrings",
+                    List.class
+            );
 
             method.invoke(component, values);
 
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 
 
     private static void applyFlags(
-            Object component,
+            CustomModelDataComponent component,
             List<Boolean> values
     ) {
 
+        if (values == null || values.isEmpty()) {
+            return;
+        }
+
         try {
 
-            Method method = component.getClass()
-                    .getMethod("setFlags", List.class);
+            Method method = CustomModelDataComponent.class.getMethod(
+                    "setFlags",
+                    List.class
+            );
 
             method.invoke(component, values);
 
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 
 
     private static void applyColors(
-            Object component,
+            CustomModelDataComponent component,
             List<Integer> values
     ) {
 
+        if (values == null || values.isEmpty()) {
+            return;
+        }
+
         try {
 
-            Method method = component.getClass()
-                    .getMethod("setColors", List.class);
+            Method method = CustomModelDataComponent.class.getMethod(
+                    "setColors",
+                    List.class
+            );
 
             method.invoke(component, values);
 
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
+
 
     public static void applyItemFlags(
             ItemMeta meta,
             Set<String> flags
     ) {
+
         if (flags == null || flags.isEmpty()) {
             return;
         }
@@ -241,37 +286,40 @@ public final class VersionSupport {
         applyLegacyItemFlags(meta, flags);
     }
 
+
     private static void applyLegacyItemFlags(
             ItemMeta meta,
             Set<String> flags
     ) {
+
         for (String name : flags) {
+
             try {
-                ItemFlag flag = ItemFlag.valueOf(name.toUpperCase());
+
+                ItemFlag flag = ItemFlag.valueOf(
+                        name.toUpperCase()
+                );
 
                 meta.addItemFlags(flag);
 
             } catch (IllegalArgumentException ignored) {
-            } catch (Throwable ignored) {
-                ignored.printStackTrace();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
             }
         }
     }
+
 
     private static boolean applyModernItemFlags(
             ItemMeta meta,
             Set<String> flags
     ) {
+
         try {
 
-            Method getTooltipDisplay = findMethod(
-                    meta.getClass(),
+            Method getTooltipDisplay = ItemMeta.class.getMethod(
                     "getTooltipDisplay"
             );
-
-            if (getTooltipDisplay == null) {
-                return false;
-            }
 
             Object tooltipDisplay = getTooltipDisplay.invoke(meta);
 
@@ -279,30 +327,23 @@ public final class VersionSupport {
                 return false;
             }
 
-            Method setHiddenComponents = findMethod(
-                    tooltipDisplay.getClass(),
+            Class<?> tooltipDisplayClass =
+                    getTooltipDisplay.getReturnType();
+
+            Method setHiddenComponents = tooltipDisplayClass.getMethod(
                     "setHiddenComponents",
                     List.class
             );
-
-            if (setHiddenComponents == null) {
-                return false;
-            }
 
             setHiddenComponents.invoke(
                     tooltipDisplay,
                     List.copyOf(flags)
             );
 
-            Method setTooltipDisplay = findMethod(
-                    meta.getClass(),
+            Method setTooltipDisplay = ItemMeta.class.getMethod(
                     "setTooltipDisplay",
-                    tooltipDisplay.getClass()
+                    tooltipDisplayClass
             );
-
-            if (setTooltipDisplay == null) {
-                return false;
-            }
 
             setTooltipDisplay.invoke(
                     meta,
@@ -311,23 +352,12 @@ public final class VersionSupport {
 
             return true;
 
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
+            return false;
+
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
             return false;
         }
     }
-
-    private static Method findMethod(
-            Class<?> clazz,
-            String name,
-            Class<?>... parameterTypes
-    ) {
-        try {
-            return clazz.getMethod(name, parameterTypes);
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
-            return null;
-        }
-    }
-
 }
