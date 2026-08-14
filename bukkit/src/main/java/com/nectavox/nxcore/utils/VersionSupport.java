@@ -34,6 +34,7 @@ public final class VersionSupport {
             }
 
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -58,6 +59,7 @@ public final class VersionSupport {
             }
 
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -78,6 +80,7 @@ public final class VersionSupport {
             method.invoke(meta, true);
 
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -108,6 +111,7 @@ public final class VersionSupport {
             method.invoke(meta, rarityValue);
 
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -146,6 +150,7 @@ public final class VersionSupport {
             setComponent.invoke(meta, component);
 
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -163,6 +168,7 @@ public final class VersionSupport {
             method.invoke(component, values);
 
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -180,6 +186,7 @@ public final class VersionSupport {
             method.invoke(component, values);
 
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -197,6 +204,7 @@ public final class VersionSupport {
             method.invoke(component, values);
 
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -214,6 +222,7 @@ public final class VersionSupport {
             method.invoke(component, values);
 
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -244,6 +253,7 @@ public final class VersionSupport {
 
             } catch (IllegalArgumentException ignored) {
             } catch (Throwable ignored) {
+                ignored.printStackTrace();
             }
         }
     }
@@ -302,6 +312,7 @@ public final class VersionSupport {
             return true;
 
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
             return false;
         }
     }
@@ -314,6 +325,7 @@ public final class VersionSupport {
         try {
             return clazz.getMethod(name, parameterTypes);
         } catch (Throwable ignored) {
+            ignored.printStackTrace();
             return null;
         }
     }
