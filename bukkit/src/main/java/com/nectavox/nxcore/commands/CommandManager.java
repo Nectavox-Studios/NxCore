@@ -360,11 +360,6 @@ public class CommandManager {
     }
 
     private PluginCommand getOrCreateCommand(String name, String description, String[] aliases) {
-        PluginCommand existing = plugin.getCommand(name);
-        if (existing != null) {
-            return existing;
-        }
-
         try {
             Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
             constructor.setAccessible(true);
