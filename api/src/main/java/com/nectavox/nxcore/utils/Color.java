@@ -19,6 +19,18 @@ public final class Color {
     private static final Pattern HEX_PATTERN =
             Pattern.compile("&#([A-Fa-f0-9]{6})");
 
+    private static final LegacyComponentSerializer SERIALIZER =
+            LegacyComponentSerializer.builder()
+                    .character('&')
+                    .hexColors()
+                    .useUnusualXRepeatedCharacterHexFormat()
+                    .build();
+
+
+    public static Component colorLegacyComponent(String text) {
+        return color(replaceLegacyColorsToHex(text));
+    }
+
     public static String colorLegacy(String text) {
         if (text == null || text.isEmpty()) {
             return "";
@@ -30,7 +42,7 @@ public final class Color {
             text = replaceLegacyColorsToMiniMessage(text);
         }
 
-        Component comp = LegacyComponentSerializer.legacyAmpersand().deserialize(text);
+        Component comp = color(text);
         return LegacyComponentSerializer.legacySection().serialize(comp);
     }
 
@@ -88,6 +100,10 @@ public final class Color {
 
         matcher.appendTail(buffer);
         return buffer.toString();
+    }
+
+    private static Component color(String text) {
+        return SERIALIZER.deserialize(text);
     }
 
     private static String replaceLegacyColorsToHex(String text) {
