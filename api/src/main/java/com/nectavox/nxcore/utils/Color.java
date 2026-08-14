@@ -123,7 +123,7 @@ public final class Color {
                 .replace("&c", "&#ff1919")
                 .replace("&d", "&#ff19ee")
                 .replace("&e", "&#e3ff00")
-                .replace("&f", "<white>")
+                .replace("&f", "&#ffffff")
 
                 .replace("&k", "<obfuscated>")
                 .replace("&l", "<bold>")
