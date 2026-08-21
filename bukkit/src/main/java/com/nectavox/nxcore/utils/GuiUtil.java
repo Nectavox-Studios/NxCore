@@ -8,6 +8,7 @@ import dev.triumphteam.gui.guis.GuiItem;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +17,7 @@ import java.util.function.Consumer;
 
 public final class GuiUtil {
 
-    public static void setItem(Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<GuiItemData> action, Object... replacements) {
+    public static void setItem(Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<InventoryClickEvent> action, Object... replacements) {
         GuiItemData itemData = guiData.getItem(key);
 
         if (itemData != null && !itemData.getSlots().isEmpty()) {
@@ -26,7 +27,7 @@ public final class GuiUtil {
                 if (itemData.getSound() != null) {
                     viewer.playSound(viewer, itemData.getSound(), 1f, 1f);
                 }
-                action.accept(itemData);
+                action.accept(e);
             });
 
             for (int slot : itemData.getSlots()) {
@@ -35,7 +36,7 @@ public final class GuiUtil {
         }
     }
 
-    public static void setSkullItem(OfflinePlayer skullOfPlayer, Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<GuiItemData> action, Object... replacements) {
+    public static void setSkullItem(OfflinePlayer skullOfPlayer, Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<InventoryClickEvent> action, Object... replacements) {
         GuiItemData itemData = guiData.getItem(key);
         if (itemData != null && !itemData.getSlots().isEmpty()) {
 
@@ -44,7 +45,7 @@ public final class GuiUtil {
                 if (itemData.getSound() != null) {
                     viewer.playSound(viewer, itemData.getSound(), 1f, 1f);
                 }
-                action.accept(itemData);
+                action.accept(e);
             });
 
             for (int slot : itemData.getSlots()) {
@@ -53,7 +54,7 @@ public final class GuiUtil {
         }
     }
 
-    public static void addItem(Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<GuiItemData> action, Object... replacements) {
+    public static void addItem(Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<InventoryClickEvent> action, Object... replacements) {
         GuiItemData itemData = guiData.getItem(key);
 
         GuiItem guiItem = GuiUtil.createGuiItem(viewer, itemData, key, replacements);
@@ -61,12 +62,12 @@ public final class GuiUtil {
             if (itemData.getSound() != null) {
                 viewer.playSound(viewer, itemData.getSound(), 1f, 1f);
             }
-            action.accept(itemData);
+            action.accept(e);
         });
         gui.addItem(guiItem);
     }
 
-    public static void addSkullItem(OfflinePlayer skullOfPlayer, Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<GuiItemData> action, Object... replacements) {
+    public static void addSkullItem(OfflinePlayer skullOfPlayer, Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<InventoryClickEvent> action, Object... replacements) {
         GuiItemData itemData = guiData.getItem(key);
 
         GuiItem guiItem = GuiUtil.createSkullGuiItem(skullOfPlayer, viewer, itemData, key, replacements);
@@ -74,7 +75,7 @@ public final class GuiUtil {
             if (itemData.getSound() != null) {
                 viewer.playSound(viewer, itemData.getSound(), 1f, 1f);
             }
-            action.accept(itemData);
+            action.accept(e);
         });
         gui.addItem(guiItem);
     }
