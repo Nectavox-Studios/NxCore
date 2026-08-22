@@ -5,6 +5,7 @@ import com.nectavox.nxcore.models.gui.GuiItemData;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
 import dev.triumphteam.gui.guis.GuiItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -39,7 +40,22 @@ public final class GuiUtil {
     public static void setSkullItem(OfflinePlayer skullOfPlayer, Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<InventoryClickEvent> action, Object... replacements) {
         GuiItemData itemData = guiData.getItem(key);
         if (itemData != null && !itemData.getSlots().isEmpty()) {
+            GuiItem guiItem = GuiUtil.createSkullGuiItem(skullOfPlayer, viewer, itemData, key, replacements);
+            guiItem.setAction(e -> {
+                if (itemData.getSound() != null) {
+                    viewer.playSound(viewer, itemData.getSound(), 1f, 1f);
+                }
+                action.accept(e);
+            });
 
+            for (int slot : itemData.getSlots()) {
+                gui.setItem(slot, guiItem);
+            }
+        }
+    }
+    public static void setSkullItem(String skullOfPlayer, Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<InventoryClickEvent> action, Object... replacements) {
+        GuiItemData itemData = guiData.getItem(key);
+        if (itemData != null && !itemData.getSlots().isEmpty()) {
             GuiItem guiItem = GuiUtil.createSkullGuiItem(skullOfPlayer, viewer, itemData, key, replacements);
             guiItem.setAction(e -> {
                 if (itemData.getSound() != null) {
@@ -80,6 +96,19 @@ public final class GuiUtil {
         gui.addItem(guiItem);
     }
 
+    public static void addSkullItem(String skullOfPlayer, Player viewer, BaseGui gui, GuiData guiData, String key, Consumer<InventoryClickEvent> action, Object... replacements) {
+        GuiItemData itemData = guiData.getItem(key);
+
+        GuiItem guiItem = GuiUtil.createSkullGuiItem(skullOfPlayer, viewer, itemData, key, replacements);
+        guiItem.setAction(e -> {
+            if (itemData.getSound() != null) {
+                viewer.playSound(viewer, itemData.getSound(), 1f, 1f);
+            }
+            action.accept(e);
+        });
+        gui.addItem(guiItem);
+    }
+
     private static GuiItem createGuiItem(@Nullable Player parsedPlayer, GuiItemData data, String key, Object... replacements) {
         if (data == null) {
             return ItemBuilder.from(Material.BARRIER)
@@ -102,6 +131,23 @@ public final class GuiUtil {
 
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwningPlayer(player);
+        item.setItemMeta(meta);
+
+        return ItemBuilder.from(item).asGuiItem();
+    }
+
+    private static GuiItem createSkullGuiItem(String playerName, @Nullable Player parsedPlayer, GuiItemData data, String key, Object... replacements) {
+        if (data == null) {
+            return ItemBuilder.from(Material.BARRIER)
+                    .name(Color.colorComponent("&cMissing: " + key))
+                    .asGuiItem();
+        }
+
+        data.setMaterial(Material.PLAYER_HEAD);
+        ItemStack item = ItemSerializer.build(parsedPlayer, data, replacements);
+
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        meta.setOwner(playerName);
         item.setItemMeta(meta);
 
         return ItemBuilder.from(item).asGuiItem();
