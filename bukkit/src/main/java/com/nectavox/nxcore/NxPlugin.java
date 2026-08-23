@@ -14,6 +14,7 @@ import com.nectavox.nxcore.managers.MenuManager;
 import com.nectavox.nxcore.audience.SpigotAudienceProvider;
 import com.nectavox.nxcore.schedulers.PaperScheduler;
 import com.nectavox.nxcore.schedulers.SpigotScheduler;
+import com.nectavox.nxcore.sign.SignInputPacketListener;
 import com.nectavox.nxcore.utils.ConfigUtil;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import lombok.Getter;
@@ -53,6 +54,7 @@ public abstract class NxPlugin extends JavaPlugin {
 
         if (isUsingPacketEvent()) {
             displayEntityManager = new DisplayEntityManager(this);
+            PacketEvents.getAPI().getEventManager().registerListener(new SignInputPacketListener(this));
         }
 
         configUtil = new ConfigUtil(this);
